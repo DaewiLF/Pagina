@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+
+<!--este es la base del crud de producto donde se intregara en los demas html
+la barra de navegacion con sus respectivos url-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu</title>
+    <link rel="stylesheet" href="{% static 'css/venta.css'%}">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            {% block menu %}
+            <a class="navbar-brand" href="{% url 'venta' %}">Panel de Control</a><!--al seleccionar es enviado a la pestaña de venta-->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-link active" aria-current="page" href="{% url 'productos' %}">Producto</a><!--al seleccionar es enviado al crud de producto-->
+                    <a class="nav-link" href="#">Usuarios</a><!--al seleccionar es enviado al crud usuarios, esta por defecto-->
+                    <a class="nav-link disabled" aria-disabled="true">Cerrar sesion</a><!--al seleccionar deberia cerrar sesion, pero esta por defecto-->
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+
+        {% endblock menu %}
+        <!--este es el inicio del contenido-->
+        {% block contenido %}
+
+
+        {% endblock contenido %}
+        <!--este es el fin del contenido-->
+        <!---------------------------------------------------------------->
+        <!--este el inicio de footer-->
+        {% block footer %}
+
+        {% endblock footer %}
+        <!--este es el fin del footer-->
+
+    </div>
+</body>
+
+<script src="{% static 'js/bootstrap.min.js'%}"></script>
+
+
+</html>

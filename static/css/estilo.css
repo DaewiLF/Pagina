@@ -1,0 +1,17 @@
+body{
+    background-color: darkgrey;
+}
+.titulo{
+    color: white;
+    text-align: center;
+}
+.foto{
+    border: 1px solid black;
+    display: block;
+    margin: auto;
+}
+.data{
+    font-size: 2em;
+    color: aquamarine;
+    list-style: none;
+}

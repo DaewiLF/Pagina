@@ -1,0 +1,46 @@
+.opcion-pago{
+    width: 48%;
+    margin-bottom: 15px;
+}
+
+.pago-card {
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: bold;
+    color: #6c757d;
+    transition: all 0.3s ease;
+}
+
+.pago-card:hover, .opcion-pago.selected .pago-card {
+    border-color: #6f42c1;
+    color: #6f42c1;
+    background-color: #f9f2ff;
+    box-shadow: 0 0 10px rgba(111, 66, 193, 0.3);
+}
+
+.opcion-pago.selected .pago-card::after {
+    content: "✓";
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #6f42c1;
+}
+
+.input-valid {
+    border-color: rgb(255, 255, 255);
+    background-color: #e6ffea;
+}
+
+
+.input-invalid ~ label {
+    color: red;
+}
+
+.input-valid ~ label {
+    color: rgb(0, 199, 56);
+}
+
+

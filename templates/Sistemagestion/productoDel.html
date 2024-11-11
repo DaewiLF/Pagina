@@ -1,0 +1,28 @@
+{% extends "Sistemagestion/base.html" %}
+{% load static %}
+
+<!--este es la pestaña de eliminar un producto,
+aqui podra ver un apartado de si desea eliminar el producto para no causar errores,
+por si selecciono mal primero deben ser cargado los datos por el medio de view eliminar_producto y despues
+sera eliminado de la base de datos-->
+{% block contenido %}
+    <div class="row">
+        <div class="col-8 offset-2">
+            <h2 class="text-center">Confirmar eliminar producto</h2>
+            <div class="alert alert-danger h3 mt-5">
+                ¿Está seguro que de eliminar el producto <br><b>nombre: {{ producto.nombre }} <br>precio: {{ producto.precio }} <br>stock: {{ producto.stock }}</b>?<!--le pregunta al usuario si desea eliminar este producto-->
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="row mt-2 d-flex justify-content-between"> 
+                    <div class="col-auto"> 
+                        <a class="btn btn-dark" href="{% url 'productos' %}">Cancelar</a><!--al seleccionar sera enviado a la lista del producto-->
+                    </div>
+                    <div class="col-auto">
+                        <button class="btn btn-danger" type="submit">Confirmar Eliminar</button><!--al seleccionar eliminara el producto y sera enviado a la pestaña lista de producto-->
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock contenido %}

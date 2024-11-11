@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token }}"> <!-- Token CSRF para protección contra ataques -->
+  <title>Venta</title>
+  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> <!-- Biblioteca jsPDF para generar PDFs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.14/jspdf.plugin.autotable.min.js"></script> <!-- Plugin para crear tablas en PDF -->
+  <link rel="stylesheet" href="{% static 'css/venta.css'%}">
+</head>
+
+<body>
+  <!--Apartado de barra de navegación-->
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'venta' %}">Panel de Control</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+        aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-link active" aria-current="page" href="{% url 'productos' %}">Producto</a><!-- Enlace a la sección de productos -->
+          <a class="nav-link" href="#">Usuarios</a><!-- Enlace a la sección de usuarios -->
+          <a class="nav-link disabled" aria-disabled="true">Cerrar sesión</a><!-- Enlace deshabilitado para cerrar sesión -->
+        </div>
+      </div>
+    </div>
+  </nav>
+    <!--fin del apartado de barra de navegación-->
+
+  <!--comienzo de apartado de cliente-->
+  <div class="container mt-4">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title"><i class="fas fa-users"></i> Datos Cliente</h5>
+            <div class="form-group">
+              <label for="cliente-id">ID Cliente</label><!-- id de cliente por defecto -->
+              <input type="number" id="cliente-id" class="form-control" disabled>
+              <button class="btn btn-secondary mt-2"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="">
+              <label for="cliente-nombre">Nombre</label><!-- Campo de entrada para nombre del cliente -->
+              <input type="text" id="cliente-nombre" class="form-control">
+            </div>
+            <!--fin del apartado cliente-->
+
+            <!--comienzo de apartado producto-->
+            <div class="container mt-4">
+              <h5 class="mb-4">Lista de Productos</h5>
+
+              <div class="mb-4">
+                <input type="text" id="buscador" class="form-control" placeholder="Buscar productos"> <!-- Campo de búsqueda para productos -->
+                <!--aqui es donde actua el script de busqueda-->
+              </div>
+
+              <!--lista de producto-->
+              <div class="row g-3" id="lista_productos">
+                {% for producto in productos %}<!-- Itera sobre la lista de productos -->
+                <div class="col-12 col-md-6 col-lg-4 producto_fila">
+                  <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                      <h5 class="card-title nombre mb-3">{{ producto.nombre }}</h5><!-- Campo de producto -->
+                      <div class="row g-2">
+                        <div class="col-6">
+                          <div class="bg-light p-2 rounded">
+                            <p class="mb-1"><strong>Precio:</strong></p>
+                            <p class="precio mb-0">${{ producto.precio }}</p><!-- Campo de precio -->
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="bg-light p-2 rounded">
+                            <p class="mb-1"><strong>Stock:</strong></p>
+                            <p class="stock mb-0">{{ producto.stock }}</p><!-- Campo de stock -->
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row mt-2">
+                        <div class="col-12">
+                          <div class="bg-light p-2 rounded">
+                            <p class="mb-1"><strong>Descuento:</strong></p>
+                            <p class="descuento mb-0">{{ producto.descuento }}%</p><!-- Campo de descuento -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-footer bg-white border-top-0">
+                      <button id="agregar-carrito" class="btn btn-primary w-100" producto_id="{{ producto.id }}" data-stock="{{ producto.stock }}"><!-- Botón para agregar el producto al carrito -->
+                        Agregar
+                    </button>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            
+            <div class="col-12 mt-4">
+              <button id="btn-Pago" class="btn btn-outline-success">Seleccionar Medio de pago</button><!-- Botón para seleccionar medio de pago -->
+            </div>
+            <!--Fin de apartado producto-->
+
+
+            <!-- Modal de Selección de Medio de Pago -->
+            <div class="modal fade" id="modalPago" tabindex="-1" aria-labelledby="modalPagoLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="modalPagoLabel">Selecciona tu medio de pago</h5><!--titulo de modal medio de pago-->
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button><!-- Botón para cerrar el modal -->
+                  </div>
+                  <!--opciones medio de pago-->
+                  <div class="modal-body">
+                    <div class="d-flex flex-wrap justify-content-between">
+                      <div class="opcion-pago" data-value="Transferencia">
+                        <div class="pago-card">
+                          <span>Transferencia</span>
+                        </div>
+                      </div>
+                      <div class="opcion-pago" data-value="Debito">
+                        <div class="pago-card">
+                          <span>Débito</span>
+                        </div>
+                      </div>
+                      <div class="opcion-pago" data-value="Credito">
+                        <div class="pago-card">
+                          <span>Crédito</span>
+                        </div>
+                      </div>                      
+                      <div class="opcion-pago" data-value="Efectivo">
+                        <div class="pago-card">
+                          <span>Efectivo</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="input-rut" class="mt-3">
+                      <label for="rut-datos">Introduzca su RUT:</label>
+                      <input type="text" id="rut-datos" class="form-control" placeholder="RUT"><!--campo para rut-->
+                    </div>
+                    <div class="form-group mt-3" id="form-datos">
+                      <label for="input-datos" id="label-datos"></label>
+                      <input type="text" id="input-datos" class="form-control"> <!-- Campo para información adicional -->
+                      <span id="validation-message"></span> 
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button><!--boton para cerrar modal-->
+                    <button type="button" class="btn btn-info" id="confirmarPago">Confirmar</button><!--boton para confirmar el medio de pago-->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <!-- fin del modal de Selección de Medio de Pago -->
+
+      <!--Comienzo de apartado carrito de compras-->
+      <div class="col-md-6">
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title" id="codigodinamico">NRO. SERIE: <span></span></h5>
+            <table class="table table-striped">
+              <thead class="thead-light">
+                <tr>
+                  <th>NRO</th>
+                  <th>PRODUCTO</th>
+                  <th>COD</th>
+                  <th>PRECIO</th>
+                  <th>CANT</th>
+                  <th>TOTAL</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Aquí es donde actúa el script carrito de compras -->
+              </tbody>
+            </table>
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <button id="generar-venta" class="btn btn-success">Generar Venta</button> <!--boton para generar la venta, aqui actua el script de generar boleta referente a venta.js-->
+              <h5>Total a Pagar: <span></span></h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--fin de apartado carrito de compras-->
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/codigodinamico.js' %}"></script>
+  <script src="{% static 'js/venta.js'%}"></script>
+  <script src="{% static 'js/buscador.js' %}"></script>
+  
+  
+</body>
+
+</html>

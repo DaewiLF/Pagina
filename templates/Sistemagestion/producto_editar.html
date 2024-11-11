@@ -1,0 +1,53 @@
+{% extends "Sistemagestion/base.html" %}
+{% load static %}
+
+<!--este es la pestaña de modificar un producto,
+aqui podra modificar el nombre,precio,stock,estado y el descuento del producto,
+primero debe ser cargado por el medio de view cargar_editar_producto y despues
+sera validado y modificado de la base de datos-->
+{% block contenido %}
+  <div class="row">
+    <div class="col">
+        <h2 class="text-center">Modificar producto</h2>
+        <form method="post" action="{% url 'productoEditado' producto.id %}"><!--al seleccionar el boton submit sera enviado a la view editar_producto-->
+            {% csrf_token %}
+            <div class="row mt-5">
+                <div class="col-3 mb-3">
+                    {{ form.nombre.label_tag }}<!--campo de nombre-->
+                    {{ form.nombre }}
+                    {{ form.nombre.errors }}
+                </div>
+                <div class="col-3 mb-3">
+                    {{ form.precio.label_tag }}<!--campo de precio-->
+                    {{ form.precio }}
+                    {{ form.precio.errors }}
+                </div>
+                <div class="col-3 mb-3">
+                    {{ form.stock.label_tag }}<!--campo de stock-->
+                    {{ form.stock }}
+                    {{ form.stock.errors }}
+                </div>
+                <div class="col-3 mb-3">
+                    {{ form.estado.label_tag }}<!--campo de estado-->
+                    {{ form.estado }}
+                    {{ form.estado.errors }}
+                </div>
+                <div class="col-3 mb-3">
+                    {{ form.descuento.label_tag }}<!--campo de descuento-->
+                    {{ form.descuento }}
+                    {{ form.descuento.errors }}
+                </div>
+                
+                <div class="row">
+                    <div class="col">
+                        <a class="btn btn-primary"  href="{% url 'venta' %}">Ir al Inicio</a><!--al seleccionar sera enviado a la pestaña de venta-->
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-warning" type="submit">Modificar</button><!--al seleccionar este boton ocurrira la accion del form-->
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+  </div>
+{% endblock contenido %}

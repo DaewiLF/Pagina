@@ -1,0 +1,51 @@
+{% extends "Sistemagestion/base.html" %}
+{% load static %}
+
+<!--este es la pestaña de crear un producto para el administrador,
+aqui podra ingresar el nombre,precio,stock,estado y el descuento del producto,
+sera validado y registrado directamente a la base de datos-->
+{% block contenido %}
+  <div class="row">
+    <div class="col">
+        <h2 class="text-center">Mantenedor de producto</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row mt-5">
+                <div class="col-3 mb-3">
+                    {{ form.nombre.label_tag }}<!--campo de nombre-->
+                    {{ form.nombre }}
+                    {{ form.nombre.errors }}
+                </div>
+                <div class="col-3 mb-3">
+                    {{ form.precio.label_tag }}<!--campo de precio-->
+                    {{ form.precio }}
+                    {{ form.precio.errors }}
+                </div>
+                <div class="col-3 mb-3">
+                    {{ form.stock.label_tag }}<!--campo de stock-->
+                    {{ form.stock }}
+                    {{ form.stock.errors }}
+                </div>
+                <div class="col-3 mb-3">
+                    {{ form.estado.label_tag }}<!--campo de estado-->
+                    {{ form.estado }}
+                    {{ form.estado.errors }}
+                </div>
+                <div class="col-3 mb-3">
+                    {{ form.descuento.label_tag }}<!--campo de descuento-->
+                    {{ form.descuento }}
+                    {{ form.descuento.errors }}
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <a class="btn btn-primary"  href="{% url 'venta' %}">Ir al Inicio</a><!--al seleccionar es enviado a la pestaña de venta-->
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-success" type="submit">Guardar</button><!--al seleccionar es enviado a la view crear_producto-->
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+  </div>
+{% endblock contenido %}
